@@ -62,6 +62,7 @@ def evaluate(dataset, data_loader, model):
     model.eval()
 
     final_loss = 0
+    counter = 0
     for bi, d in tqdm(enumerate(data_loader), total=len(dataset)/data_loader.batch_size):
         counter += 1
         image = d["image"]
