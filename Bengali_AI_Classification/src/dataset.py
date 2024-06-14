@@ -46,3 +46,34 @@ class BengaliDatasetTrain:
             "vowel_diacritic": torch.tensor(self.vowel_diacritic[item], dtype=torch.long),
             "consonant_diacritic": torch.tensor(self.consonant_diacritic[item], dtype=torch.long)
         }
+
+
+class BengaliDatasetTest:
+    def __init__(self, df, img_height, img_width, mean, std):
+        
+        self.image_ids = df.image_id.values
+        self.img_arr = df.iloc[:, 1:].values
+
+        self.aug = albumentations.Compose([
+            albumentations.Resize(img_height, img_width, always_apply=True),
+            albumentations.Normalize(mean, std, always_apply=True)
+        ])
+
+
+    def __len__(self):
+        return len(self.image_ids)
+    
+    def __getitem__(self, item):
+        image = self.img_arr[item, :]
+        img_id = self.image_ids[item]
+        
+        image = image.reshape(137, 236).astype(float)
+        image = Image.fromarray(image).convert("RGB")
+        image = self.aug(image=np.array(image))["image"]
+        image = np.transpose(image, (2, 0, 1)).astype(np.float32)
+        
+
+        return {
+            "image": torch.tensor(image, dtype=torch.float),
+            "image_id": img_id
+        }

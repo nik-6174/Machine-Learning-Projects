@@ -6,7 +6,6 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 
-
 DEVICE = "cuda"
 TRAINING_FOLDS_CSV = os.environ.get("TRAINING_FOLDS_CSV")
 IMG_HEIGHT = int(os.environ.get("IMG_HEIGHT"))
